@@ -1,42 +1,43 @@
 # IMDB Movie Review Sentiment Analysis
 
-A machine learning project that classifies IMDB movie reviews as **positive** or **negative**.
+This project classifies IMDB movie reviews as positive or negative.
 
-## Dataset
+## Models
 
-- File: `IMDB Dataset.csv`
-- Columns:
-  - `review`: Movie review text
-  - `sentiment`: Positive or negative label
-
-> The dataset is excluded from Git because it is large.
+- Multinomial Naive Bayes
+- Logistic Regression
 
 ## Workflow
 
-1. Load the IMDB review dataset.
-2. Clean review text:
-   - Convert to lowercase
-   - Remove HTML tags and non-letter characters
-   - Remove English stop words
-   - Apply Porter stemming
-3. Split the data into training (80%) and test (20%) sets.
-4. Convert text to TF-IDF features with unigrams and bigrams.
-5. Train:
-   - Multinomial Naive Bayes
-   - Logistic Regression
-6. Evaluate models using classification reports, ROC-AUC scores, and ROC curves.
-7. Display words most associated with positive and negative reviews.
+1. Clean review text by lowercasing, removing HTML/special characters and stop words, and applying Porter stemming.
+2. Split data into 80% training and 20% test data.
+3. Create TF-IDF unigram and bigram features.
+4. Train and evaluate both models with classification metrics and ROC-AUC.
 
 ## Data Leakage Prevention
 
-The dataset is split before TF-IDF fitting. The vectorizer learns vocabulary and word-frequency information only from training data:
+TF-IDF is fitted only on training data. The test data remains unseen until evaluation.
 
 ```python
 x_train_tfidf = tfidf.fit_transform(x_train)
 x_test_tfidf = tfidf.transform(x_test)
 ```
 
-This keeps the test set unseen during training and gives a more reliable evaluation.
+## Results
+
+![ROC Curve Comparison](roc_curve_comparison.png)
+
+Logistic Regression achieved ROC-AUC of approximately **0.96**, compared with approximately **0.93** for Naive Bayes.
+
+### Top 10 Positive Words
+
+`excel`, `perfect`, `great`, `brilliant`, `enjoy`, `favorit`, `amaz`, `hilari`, `superb`, `today`
+
+### Top 10 Negative Words
+
+`worst`, `aw`, `wast`, `bore`, `bad`, `terribl`, `poor`, `disappoint`, `fail`, `dull`
+
+> Terms are stemmed during preprocessing, so some words appear shortened.
 
 ## Requirements
 
@@ -46,8 +47,4 @@ pip install pandas scikit-learn matplotlib nltk
 
 ## Run
 
-Open and run the cells in:
-
-```text
-movie_review.ipynb
-```
+Open `movie_review.ipynb` and run all cells.
